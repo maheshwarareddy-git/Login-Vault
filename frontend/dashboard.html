@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="LoginVault Dashboard — Your security command center.">
+    <title>Dashboard — LoginVault</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+</head>
+
+<body>
+
+    <!-- Animated Background -->
+    <div class="bg-scene">
+        <div class="bg-orb bg-orb--1"></div>
+        <div class="bg-orb bg-orb--2"></div>
+        <div class="bg-orb bg-orb--3"></div>
+        <div class="bg-grid"></div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard-layout">
+
+        <!-- Top Navigation -->
+        <nav class="dash-nav">
+            <div class="dash-nav__brand">
+                <div class="dash-nav__logo">🔐</div>
+                <span class="dash-nav__name">LoginVault</span>
+            </div>
+            <div class="dash-nav__actions">
+                <div class="dash-nav__user">
+                    <div class="dash-nav__avatar" id="userAvatar">?</div>
+                    <span id="userNavName">Loading...</span>
+                </div>
+                <a href="/settings" class="btn btn--outline btn--logout" style="text-decoration: none;">
+                    ⚙️ Settings
+                </a>
+                <button class="btn btn--outline btn--logout" id="logoutBtn">
+                    🚪 Logout
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="dash-main">
+
+            <!-- Welcome Section -->
+            <section class="dash-welcome">
+                <h1 class="dash-welcome__greeting">Welcome back, <span id="userName">User</span> 👋</h1>
+                <p class="dash-welcome__subtitle">Here's your security overview and account activity.</p>
+            </section>
+
+            <!-- Verification Banner -->
+            <div id="verifyBanner" class="alert alert--warning"
+                style="display: none; margin-bottom: 2rem; align-items: center; justify-content: space-between; background: rgba(255, 152, 0, 0.1); border: 1px solid rgba(255, 152, 0, 0.2); color: #ffca28; padding: 1rem; border-radius: 0.5rem;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <span style="font-size: 1.5rem;">⚠️</span>
+                    <div>
+                        <h3 style="font-weight: 700; margin-bottom: 0.25rem; font-size: 1rem;">Verify your email</h3>
+                        <p style="font-size: 0.9rem; margin: 0; opacity: 0.9;">Please check your email to verify your
+                            account.</p>
+                    </div>
+                </div>
+                <button id="resendVerifyBtn" class="btn btn--sm btn--outline"
+                    style="background: transparent; border-color: currentColor; color: inherit; padding: 0.5rem 1rem;">Resend
+                    Email</button>
+            </div>
+
+            <!-- Stats Grid -->
+            <section class="stats-grid">
+
+                <!-- Security Score -->
+                <div class="stat-card stat-card--security">
+                    <div class="stat-card__header">
+                        <span class="stat-card__label">Security Score</span>
+                        <div class="stat-card__icon">🛡️</div>
+                    </div>
+                    <div class="security-ring">
+                        <svg viewBox="0 0 100 100">
+                            <circle class="security-ring__bg" cx="50" cy="50" r="40"></circle>
+                            <circle class="security-ring__fill" id="securityRingFill" cx="50" cy="50" r="40"
+                                stroke="url(#securityGradient)"></circle>
+                            <defs>
+                                <linearGradient id="securityGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#11998e" />
+                                    <stop offset="100%" stop-color="#38ef7d" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div class="security-ring__text" id="securityScore">0%</div>
+                    </div>
+                    <p class="stat-card__detail" id="securityDetail">Calculating...</p>
+                </div>
+
+                <!-- Total Logins -->
+                <div class="stat-card stat-card--logins">
+                    <div class="stat-card__header">
+                        <span class="stat-card__label">Total Logins</span>
+                        <div class="stat-card__icon">📊</div>
+                    </div>
+                    <p class="stat-card__value" id="totalLogins">0</p>
+                    <p class="stat-card__detail" id="lastLogin">Loading...</p>
+                </div>
+
+                <!-- Account Age -->
+                <div class="stat-card stat-card--age">
+                    <div class="stat-card__header">
+                        <span class="stat-card__label">Account Age</span>
+                        <div class="stat-card__icon">📅</div>
+                    </div>
+                    <p class="stat-card__value" id="accountAge">—</p>
+                    <p class="stat-card__detail" id="createdAt">Loading...</p>
+                </div>
+
+                <!-- Account Status -->
+                <div class="stat-card stat-card--status">
+                    <div class="stat-card__header">
+                        <span class="stat-card__label">Account Status</span>
+                        <div class="stat-card__icon">⚡</div>
+                    </div>
+                    <p class="stat-card__value" id="accountStatus" style="color: var(--accent-success);">Active</p>
+                    <p class="stat-card__detail" id="accountRole">Role: User</p>
+                </div>
+            </section>
+
+            <!-- Security Activity Log -->
+            <section class="security-section">
+                <h2 class="security-section__title">🔍 Recent Security Activity</h2>
+                <ul class="security-log" id="securityLog">
+                    <li class="security-log--empty">Loading activity log...</li>
+                </ul>
+            </section>
+
+            <!-- Admin Section (Hidden for normal users) -->
+            <section class="security-section" id="adminSection"
+                style="display: none; border-color: var(--accent-primary);">
+                <h2 class="security-section__title" style="color: var(--accent-primary);">⚡ Admin Controls — Unblock
+                    Requests</h2>
+                <div class="table-responsive" style="margin-top: 1rem;">
+                    <table class="admin-table" style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr
+                                style="text-align: left; border-bottom: 1px solid var(--border-subtle); color: var(--text-muted);">
+                                <th style="padding: 0.5rem;">User</th>
+                                <th style="padding: 0.5rem;">Reason</th>
+                                <th style="padding: 0.5rem;">Time</th>
+                                <th style="padding: 0.5rem;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminRequestsTable">
+                            <tr>
+                                <td colspan="4" style="padding: 1rem; text-align: center;">No pending requests.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="/js/dashboard.js?v=3"></script>
+</body>
+
+</html>

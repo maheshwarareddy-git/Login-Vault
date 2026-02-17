@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="LoginVault — Enterprise Secure Authentication System powered by Firebase.">
+  <title>LoginVault — Secure Authentication</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+</head>
+
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-scene">
+    <div class="bg-orb bg-orb--1"></div>
+    <div class="bg-orb bg-orb--2"></div>
+    <div class="bg-orb bg-orb--3"></div>
+    <div class="bg-grid"></div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Main Auth Container -->
+  <div class="auth-container">
+    <div class="auth-card">
+
+      <!-- Logo -->
+      <div class="auth-logo">
+        <div class="auth-logo__icon">🔐</div>
+        <h1 class="auth-logo__title">LoginVault</h1>
+        <p class="auth-logo__subtitle">Enterprise Secure Authentication</p>
+      </div>
+
+      <!-- Tab Switcher -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login" id="tabLogin">Sign In</button>
+        <button class="auth-tab" data-tab="register" id="tabRegister">Create Account</button>
+      </div>
+
+      <!-- ════ LOGIN FORM ════ -->
+      <form class="auth-form active" id="loginForm">
+
+        <!-- Email -->
+        <div class="input-group">
+          <label class="input-group__label" for="loginEmail">Email Address</label>
+          <div class="input-group__wrapper">
+            <span class="input-group__icon">✉️</span>
+            <input type="email" id="loginEmail" class="input-group__input" placeholder="you@example.com"
+              autocomplete="email" required>
+          </div>
+          <p class="input-group__error">Please enter a valid email address.</p>
+        </div>
+
+        <!-- Password -->
+        <div class="input-group">
+          <label class="input-group__label" for="loginPassword">Password</label>
+          <div class="input-group__wrapper">
+            <span class="input-group__icon">🔒</span>
+            <input type="password" id="loginPassword" class="input-group__input" placeholder="Enter your password"
+              autocomplete="current-password" required>
+            <button type="button" class="input-group__toggle"
+              onclick="togglePassword('loginPassword', this)">👁️</button>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn--primary" id="loginBtn">
+          <span class="btn__text">Sign In Securely</span>
+          <div class="btn__loading"></div>
+        </button>
+
+        <p class="auth-footer">
+          <a href="/forgot-password">Forgot your password?</a>
+        </p>
+
+        <p class="auth-footer">
+          🔒 Secure Login
+        </p>
+      </form>
+
+      <!-- ════ REGISTER FORM ════ -->
+      <form class="auth-form" id="registerForm">
+
+        <!-- Full Name -->
+        <div class="input-group">
+          <label class="input-group__label" for="regName">Full Name</label>
+          <div class="input-group__wrapper">
+            <span class="input-group__icon">👤</span>
+            <input type="text" id="regName" class="input-group__input" placeholder="John Doe" autocomplete="name">
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="input-group">
+          <label class="input-group__label" for="regEmail">Email Address</label>
+          <div class="input-group__wrapper">
+            <span class="input-group__icon">✉️</span>
+            <input type="email" id="regEmail" class="input-group__input" placeholder="you@example.com"
+              autocomplete="email" required>
+          </div>
+          <p class="input-group__error">Please enter a valid email address.</p>
+        </div>
+
+        <!-- Password -->
+        <div class="input-group">
+          <label class="input-group__label" for="regPassword">Password</label>
+          <div class="input-group__wrapper">
+            <span class="input-group__icon">🔒</span>
+            <input type="password" id="regPassword" class="input-group__input" placeholder="Create a strong password"
+              autocomplete="new-password" required>
+            <button type="button" class="input-group__toggle" onclick="togglePassword('regPassword', this)">👁️</button>
+          </div>
+
+          <!-- Password Strength Meter -->
+          <div class="password-strength" id="passwordStrength">
+            <div class="password-strength__bar">
+              <div class="password-strength__fill" id="strengthFill" data-strength="0"></div>
+            </div>
+            <p class="password-strength__text" id="strengthText">Enter a password</p>
+            <div class="password-strength__checks">
+              <div class="password-check" id="checkLength">
+                <span class="password-check__icon">○</span>
+                <span>8+ characters</span>
+              </div>
+              <div class="password-check" id="checkUpper">
+                <span class="password-check__icon">○</span>
+                <span>Uppercase letter</span>
+              </div>
+              <div class="password-check" id="checkLower">
+                <span class="password-check__icon">○</span>
+                <span>Lowercase letter</span>
+              </div>
+              <div class="password-check" id="checkNumber">
+                <span class="password-check__icon">○</span>
+                <span>Number</span>
+              </div>
+              <div class="password-check" id="checkSpecial">
+                <span class="password-check__icon">○</span>
+                <span>Special character</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="input-group">
+          <label class="input-group__label" for="regConfirmPassword">Confirm Password</label>
+          <div class="input-group__wrapper">
+            <span class="input-group__icon">🔒</span>
+            <input type="password" id="regConfirmPassword" class="input-group__input"
+              placeholder="Re-enter your password" autocomplete="new-password" required>
+          </div>
+          <p class="input-group__error" id="confirmError">Passwords do not match.</p>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn--primary" id="registerBtn">
+          <span class="btn__text">Create Secure Account</span>
+          <div class="btn__loading"></div>
+        </button>
+
+        <p class="auth-footer">
+          🔒 Passwords are locally hashed (bcrypt) and secure.
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Firebase SDK (compat for vanilla JS) -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+
+  <!-- Firebase Config -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDgFwnb9KGR3ahfUuA41Lgz43s0dWYVpR8",
+      authDomain: "loginvault-c872d.firebaseapp.com",
+      projectId: "loginvault-c872d",
+      storageBucket: "loginvault-c872d.firebasestorage.app",
+      messagingSenderId: "331841953300",
+      appId: "1:331841953300:web:4ab86d4b76ae9246e25101",
+      measurementId: "G-CSG8T9E84F"
+    };
+    firebase.initializeApp(firebaseConfig);
+    window.firebaseAuth = firebase.auth();
+  </script>
+
+  <script src="/js/auth.js?v=2"></script>
+</body>
+
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="LoginVault — Your account settings and security preferences.">
+    <title>Settings — LoginVault</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+    <style>
+        .settings-section {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            animation: fade-up 0.6s var(--ease-smooth) backwards;
+        }
+
+        .settings-section:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .settings-section:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .settings-section:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        .settings-section__title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .settings-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .settings-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .settings-row .input-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .settings-info {
+            font-size: 0.825rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .settings-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .settings-badge--success {
+            background: rgba(56, 239, 125, 0.1);
+            color: var(--accent-success);
+        }
+
+        .settings-badge--info {
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--accent-primary);
+        }
+
+        .settings-badge--firebase {
+            background: rgba(255, 152, 0, 0.1);
+            color: #ffca28;
+        }
+
+        .account-detail {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.9rem;
+        }
+
+        .account-detail:last-child {
+            border-bottom: none;
+        }
+
+        .account-detail__label {
+            color: var(--text-secondary);
+        }
+
+        .account-detail__value {
+            font-weight: 600;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--accent-primary);
+        }
+
+        @media (max-width: 600px) {
+            .settings-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-scene">
+        <div class="bg-orb bg-orb--1"></div>
+        <div class="bg-orb bg-orb--2"></div>
+        <div class="bg-orb bg-orb--3"></div>
+        <div class="bg-grid"></div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div class="dashboard-layout">
+        <nav class="dash-nav">
+            <div class="dash-nav__brand">
+                <div class="dash-nav__logo">🔐</div>
+                <span class="dash-nav__name">LoginVault</span>
+            </div>
+            <div class="dash-nav__actions">
+                <div class="dash-nav__user">
+                    <div class="dash-nav__avatar" id="userAvatar">?</div>
+                    <span id="userNavName">Loading...</span>
+                </div>
+                <button class="btn btn--outline btn--logout" id="logoutBtn">🚪 Logout</button>
+            </div>
+        </nav>
+
+        <main class="dash-main">
+            <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+
+            <section class="dash-welcome" style="margin-bottom: 1.5rem;">
+                <h1 class="dash-welcome__greeting">⚙️ Account Settings</h1>
+                <p class="dash-welcome__subtitle">Manage your profile and security preferences</p>
+            </section>
+
+            <!-- Profile Section -->
+            <div class="settings-section">
+                <h2 class="settings-section__title">👤 Profile Information</h2>
+                <form id="profileForm">
+                    <div class="settings-row">
+                        <div class="input-group">
+                            <label class="input-group__label" for="settingsName">Display Name</label>
+                            <div class="input-group__wrapper">
+                                <span class="input-group__icon">👤</span>
+                                <input type="text" id="settingsName" class="input-group__input" placeholder="Your name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-row" style="margin-top: 0.5rem;">
+                        <div class="input-group">
+                            <label class="input-group__label">Email Address</label>
+                            <div class="input-group__wrapper">
+                                <span class="input-group__icon">✉️</span>
+                                <input type="email" id="settingsEmail" class="input-group__input" disabled
+                                    style="opacity: 0.6;">
+                            </div>
+                            <p class="settings-info">Email is managed by Firebase Authentication and cannot be changed
+                                here.</p>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn--primary"
+                        style="margin-top: 1rem; width: auto; padding: 0.7rem 2rem;" id="saveProfileBtn">
+                        <span class="btn__text">Save Changes</span>
+                        <div class="btn__loading"></div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Change Password (Firebase) -->
+            <div class="settings-section">
+                <h2 class="settings-section__title">🔒 Change Password <span
+                        class="settings-badge settings-badge--firebase">🔥 Firebase</span></h2>
+                <p class="settings-info" style="margin-bottom: 1rem;">
+                    Password changes are handled securely by Firebase. Click the button below and Firebase will send a
+                    password reset email to your registered address.
+                </p>
+                <button class="btn btn--primary" style="width: auto; padding: 0.7rem 2rem;" id="sendResetBtn">
+                    <span class="btn__text">📧 Send Password Reset Email</span>
+                    <div class="btn__loading"></div>
+                </button>
+            </div>
+
+            <!-- Account Info -->
+            <div class="settings-section">
+                <h2 class="settings-section__title">📋 Account Details</h2>
+                <div class="account-detail">
+                    <span class="account-detail__label">Account ID</span>
+                    <span class="account-detail__value" id="acctId"
+                        style="font-family: var(--font-mono); font-size: 0.8rem;">—</span>
+                </div>
+                <div class="account-detail">
+                    <span class="account-detail__label">Auth Provider</span>
+                    <span class="account-detail__value"><span class="settings-badge settings-badge--firebase">🔥
+                            Firebase</span></span>
+                </div>
+                <div class="account-detail">
+                    <span class="account-detail__label">Role</span>
+                    <span class="account-detail__value" id="acctRole">—</span>
+                </div>
+                <div class="account-detail">
+                    <span class="account-detail__label">Created</span>
+                    <span class="account-detail__value" id="acctCreated">—</span>
+                </div>
+                <div class="account-detail">
+                    <span class="account-detail__label">Last Login</span>
+                    <span class="account-detail__value" id="acctLastLogin">—</span>
+                </div>
+                <div class="account-detail">
+                    <span class="account-detail__label">Account Status</span>
+                    <span class="account-detail__value"><span class="settings-badge settings-badge--success"
+                            id="acctStatus">✅ Active</span></span>
+                </div>
+                <div class="account-detail">
+                    <span class="account-detail__label">Security Score</span>
+                    <span class="account-detail__value"><span class="settings-badge settings-badge--info"
+                            id="acctScore">—</span></span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+
+    <script>
+        firebase.initializeApp({
+            apiKey: "AIzaSyDgFwnb9KGR3ahfUuA41Lgz43s0dWYVpR8",
+            authDomain: "loginvault-c872d.firebaseapp.com",
+            projectId: "loginvault-c872d",
+            storageBucket: "loginvault-c872d.firebasestorage.app",
+            messagingSenderId: "331841953300",
+            appId: "1:331841953300:web:4ab86d4b76ae9246e25101"
+        });
+
+        function showToast(msg, type = 'info', dur = 5000) {
+            const c = document.getElementById('toastContainer');
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+            const t = document.createElement('div');
+            t.className = 'toast toast--' + type;
+            t.innerHTML = '<span class="toast__icon">' + icons[type] + '</span><span class="toast__message">' + msg + '</span><button class="toast__close" onclick="this.parentElement.classList.add(\'toast-exit\'); setTimeout(() => this.parentElement.remove(), 300)">✕</button>';
+            c.appendChild(t);
+            setTimeout(() => { if (t.parentElement) { t.classList.add('toast-exit'); setTimeout(() => t.remove(), 300); } }, dur);
+        }
+
+        function formatDate(d) {
+            try { return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+            catch { return d; }
+        }
+
+        // Load settings
+        async function loadSettings() {
+            try {
+                const res = await fetch('/api/auth/me', { credentials: 'include' });
+                if (!res.ok) { window.location.href = '/'; return; }
+                const { user } = await res.json();
+
+                document.getElementById('settingsName').value = user.name || '';
+                document.getElementById('settingsEmail').value = user.email || '';
+                document.getElementById('userNavName').textContent = user.name || user.email.split('@')[0];
+                document.getElementById('userAvatar').textContent = (user.name || user.email)[0].toUpperCase();
+                document.getElementById('acctId').textContent = user.id.slice(0, 8) + '...';
+                document.getElementById('acctRole').textContent = user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'User';
+                document.getElementById('acctCreated').textContent = formatDate(user.createdAt);
+                document.getElementById('acctLastLogin').textContent = user.lastLogin ? formatDate(user.lastLogin) : 'First login';
+
+                const dashRes = await fetch('/api/user/dashboard', { credentials: 'include' });
+                if (dashRes.ok) {
+                    const { data } = await dashRes.json();
+                    document.getElementById('acctScore').textContent = '🛡️ ' + (data.stats.securityScore || 0) + '%';
+                }
+            } catch (err) {
+                showToast('Failed to load settings.', 'error');
+            }
+        }
+
+        // Save profile
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('saveProfileBtn');
+            const name = document.getElementById('settingsName').value.trim();
+            btn.classList.add('loading'); btn.disabled = true;
+            try {
+                const res = await fetch('/api/user/profile', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ name })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast('Profile updated!', 'success');
+                    document.getElementById('userNavName').textContent = name || 'User';
+                    document.getElementById('userAvatar').textContent = name ? name[0].toUpperCase() : '?';
+                } else { showToast(data.message || 'Update failed.', 'error'); }
+            } catch { showToast('Network error.', 'error'); }
+            finally { btn.classList.remove('loading'); btn.disabled = false; }
+        });
+
+        // Password reset via Firebase
+        document.getElementById('sendResetBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('sendResetBtn');
+            const email = document.getElementById('settingsEmail').value;
+            if (!email) { showToast('Could not determine your email.', 'error'); return; }
+
+            btn.classList.add('loading'); btn.disabled = true;
+            try {
+                await firebase.auth().sendPasswordResetEmail(email);
+                showToast('Password reset email sent to ' + email + '!', 'success', 8000);
+            } catch (err) {
+                console.error(err);
+                showToast('Failed to send reset email. Please try again.', 'error');
+            } finally { btn.classList.remove('loading'); btn.disabled = false; }
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                await firebase.auth().signOut();
+                await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+                window.location.href = '/';
+            } catch { showToast('Logout failed.', 'error'); }
+        });
+
+        loadSettings();
+    </script>
+</body>
+
+</html>
