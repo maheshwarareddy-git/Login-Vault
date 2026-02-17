@@ -61,6 +61,15 @@ LoginVault is a robust, enterprise-scale authentication system built with Node.j
 - `data/`: Local storage for user and system data.
 - `server.js`: Application entry point.
 
-## 📜 License
+## 🌐 Deployment (Render)
 
-Distributed under the MIT License. See `LICENSE` for more information.
+This project is optimized for deployment on **Render**.
+
+1. Connect your GitHub repository to a new **Render Web Service**.
+2. Set the **Build Command** to `npm install`.
+3. Set the **Start Command** to `npm start`.
+4. Add your `.env` variables to the Render Environment settings.
+
+For a detailed guide, see [render_setup.md](./render_setup.md).
+
+## 📜 License
