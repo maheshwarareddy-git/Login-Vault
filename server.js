@@ -113,7 +113,40 @@ app.use(globalErrorHandler);
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+/**
+ * Bootstrap Admin Account
+ * Creates a default admin if none exists in the database.
+ */
+async function bootstrapAdmin() {
+    try {
+        const User = require('./backend/models/User');
+        const adminEmail = process.env.ADMIN_EMAIL || 'berserk41355@gmail.com';
+        const adminPass = process.env.ADMIN_PASS || 'Mahesh*3033';
+
+        const existingAdmin = User.findByEmail(adminEmail);
+
+        if (!existingAdmin) {
+            console.log('🚀 Bootstrapping Admin account...');
+            await User.create({
+                email: adminEmail,
+                password: adminPass,
+                name: 'System Admin',
+                role: 'admin'
+            });
+            console.log(`✅ Admin account created: ${adminEmail}`);
+        } else if (existingAdmin.role !== 'admin') {
+            const JsonDB = require('./backend/config/database');
+            const db = new JsonDB('users');
+            db.updateById(existingAdmin.id, { role: 'admin' });
+            console.log(`✅ User promoted to Admin: ${adminEmail}`);
+        }
+    } catch (err) {
+        console.error('❌ Admin bootstrap failed:', err.message);
+    }
+}
+
+app.listen(PORT, async () => {
+    await bootstrapAdmin();
     console.log('');
     console.log('  ╔═══════════════════════════════════════════════╗');
     console.log('  ║                                               ║');

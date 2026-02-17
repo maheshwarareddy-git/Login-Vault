@@ -21,7 +21,7 @@ class User {
      * @param {Object} userData - { email, password, name }
      * @returns {Object} Created user (without password)
      */
-    static async create({ email, password, name }) {
+    static async create({ email, password, name, role = 'user' }) {
         // Hash password with bcrypt (12 salt rounds)
         const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
 
@@ -30,11 +30,11 @@ class User {
             email: email.toLowerCase().trim(),
             name: name ? name.trim() : '',
             passwordHash,
-            role: 'user',
-            isVerified: false,
+            role,
+            isVerified: true, // Auto-verify bootstrapped/created users for now
             isLocked: false,
             failedLoginAttempts: 0,
-            unblockRequest: null, // { reason, status: 'pending'|'approved'|'rejected', timestamp }
+            unblockRequest: null,
             lastLogin: null,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),

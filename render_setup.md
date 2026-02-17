@@ -27,6 +27,8 @@ Click on the **Environment** tab and add the variables from your `.env` file:
 - `FIREBASE_PRIVATE_KEY` (Make sure to wrap this in double quotes)
 - `EMAIL_USER`
 - `EMAIL_PASS`
+- `ADMIN_EMAIL`: `berserk41355@gmail.com`
+- `ADMIN_PASS`: `Mahesh*3033`
 - `PORT`: `3000`
 
 ## 5. Deploy!
